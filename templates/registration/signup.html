@@ -1,0 +1,116 @@
+{% extends 'registration/base.html' %}
+{% load static %}
+{% block title %}
+    Sign Up 
+{% endblock %}
+{% block style %}
+    html,
+    body {
+    height: 100%;
+    }
+
+    body {
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 40px;
+    background-color: #fff;
+    }
+
+    .form-signup {
+    width: 100%;
+    max-width: 630px;
+    padding: 15px;
+    margin: auto;
+    }
+
+    .form-signup .checkbox {
+    font-weight: 400;
+    }
+
+    .form-signup .form-floating:focus-within {
+    z-index: 2;
+    }
+
+    .form-signup input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    }
+
+    .form-signup input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    }
+{% endblock %}    
+{% block body %}
+    <div class="text-center">
+        <main class="form-signup">
+            <form method="post" action="{% url 'ssapp:signup' %}">
+                {% csrf_token %}
+                <img class="mb-4" src="{% static '/images/aiu_nb_jlogo.png' %}"  alt="" height="72">
+                <h1 class="h3 mb-3 fw-normal">Sign Up</h1>
+
+                <div class="form-floating my-1">
+                    <input type="text" name="username" class="form-control" id="username" placeholder="username">
+                    <label for="username">Username</label>
+                </div>
+                <div class="row g-2">
+                    <div class="col form-floating">
+                        <input type="password" name="password1" class="form-control" id="floatingPassword1" >
+
+                        <label for="floatingPassword1"> Password</label>
+                    </div>
+                    <div class="col form-floating">
+                        <input type="password" name="password2" class="form-control" id="floatingPassword" required> 
+                        <label for="floatingPassword2">Confirm Password</label>
+                    </div>
+                </div>
+                <div class="form-floating my-1">
+                    <input type="email" name="email" class="form-control" id="email" required>
+                    <label for="email">Email</label>
+                </div>
+
+                <div class="row g-2 mb-2">
+                    <div class="col form-floating">
+                        <input type="text" name="first_name" class="form-control" id="first_name" required>
+
+                        <label for="first_name"> First Name</label>
+                    </div>
+                    <div class="col form-floating">
+                        <input type="text" name="last_name" class="form-control" id="last_name" required> 
+                        <label for="last_name">Last Name</label>
+                    </div>
+                </div>
+
+                <div class="form-floating my-1">
+                    <select name="major" class="form-control" id="id_major" required>
+                        <option>---</option>
+                        <option>Public Health</option>
+                        <option>Information Technology</option>
+                        <option>Teaching</option>
+                        <option>Accounting</option>
+                        <option>Management</option>
+                        <option>Biology</option>
+                        <option>Nursing</option>
+                    </select>
+                    <label for="id_major">Major</label>
+                </div>
+
+
+                <input type="hidden" name="next" value="{{ next }}" />
+                <button class="w-100 btn btn-lg btn-outline-primary" type="submit">Enroll</button>
+                <p class="my-1">Already have account? <a href="{% url 'login' %}">Login</a></p>
+                {% if form.errors %}
+                    <script>
+                        Toasty("Sign up error", "{{ form.errors.as_json }}");
+                    </script>
+                {% endif %}
+
+            </form>
+
+        </main>
+
+    </div>
+{% endblock %}

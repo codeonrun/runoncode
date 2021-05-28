@@ -1,0 +1,112 @@
+{% extends 'ssapp/base.html' %}
+{% load static %}
+{% block header_admin_course %} <span class="text-muted"> Course </span> {% endblock %}
+{% block title %} Courses {% endblock %}
+{% block body %}
+    <div class="container py-2">
+        <div class="p-5 mb-2 bg-light rounded-3">
+            <div class="container-fluid py-5 mb-2">
+                <h1 class="display-5 fw-bold">All Courses</h1>
+                <img class="float-end" src="{% static 'images/undraw_Books_l33t.svg' %}" height="150px">
+                <p class="col-md-8 fs-4 mb-4"> Manage Courses </p>
+            </div>
+        </div>
+
+    </div>
+    <div class="p-5">
+        <h2 class="display-7 fw-bold"> Create Course </h2>
+        <form id="create_course">
+            {% csrf_token %}
+            {{ form }} 
+            <input type="submit" value="Create" class="my-2 btn btn-outline-primary">
+        </form>
+        <h2 class="display-7 fw-bold mt-5" >General Education Courses</h2>
+        <table class="table" id="ge_table">
+            <thead>
+            <tr>
+                <th>CourseID</th>
+                <th>CourseName</th>
+                <th>Credits</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for course in all_courses %}
+                {% if course.category == "General Education Courses" %}
+                    <tr>
+                        <td><a href="{% url 'ssapp:admin_class' course.id %}">{{ course.id }}</a></td>
+                        <td>{{ course.name }}</td>
+                        <td>{{ course.credits }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+        <h2 class="display-7 fw-bold mt-5">Professional Education Courses</h2>
+        <table class="table" id="pro_table">
+            <thead>
+            <tr>
+                <th>CourseID</th>
+                <th>CourseName</th>
+                <th>Credits</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for course in all_courses %}
+                {% if course.category == "Professional Courses" %}
+                    <tr>
+                        <td><a href={% url 'ssapp:admin_class' course.id %}>{{ course.id }}</a></td>
+                        <td>{{ course.name }}</td>
+                        <td>{{ course.credits }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+
+
+    </div>
+
+{% endblock %}
+{% block script %}
+    $('#create_course').submit(function (e) {
+    e.preventDefault();
+    var serializedData = $(this).serialize();
+    $.ajax({
+    type: 'POST',
+    url: "{% url 'ssapp:admin_course' %}",
+    data: serializedData,
+    success: function (response) {
+    console.log(response);
+    console.log("JSON", JSON.parse(response["instance"]));
+    let instance = JSON.parse(response["instance"]);
+    let curr = instance[0]["fields"];
+    console.log(curr); 
+    let temp = curr["category"];
+    if (temp == "Professional Courses") {
+        temp = "#pro_table";
+        } else {
+        temp = "#ge_table";
+        }
+    console.log(temp);
+    $(`${temp} tbody`).append(
+    `
+    <tr>
+        <td>${instance[0]["pk"]}</td>
+        <td>${curr["name"]}</td>
+        <td>${curr["credits"]}</td>
+    </tr>
+    `
+    );
+    Toasty("Course Creation", `Successfully created ${instance[0]["pk"]}`);
+    $("#create_course").trigger('reset');
+    $("#id_id").focus();
+
+    },
+    error: function(response) {
+    console.log(response["responseJSON"]["error"]);
+    }
+
+    })
+    })
+
+{% endblock %}

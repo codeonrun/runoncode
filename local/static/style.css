@@ -1,0 +1,6 @@
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th i a {
+  background-color: #18345e !important;
+  color: white !important;
+
+}
+
