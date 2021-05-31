@@ -21,5 +21,6 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('ssapp/', include('ssapp.urls')),
     path('', include('local.urls')),
+    path('notekeeper/', include('notekeeper.urls')),
 ]
 

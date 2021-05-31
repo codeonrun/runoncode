@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'local',
+    'notekeeper',
     'ssapp.apps.ScheduleSchemerConfig',
     'django.contrib.admin',
     'django.contrib.auth',
